@@ -1,27 +1,36 @@
-function [] = plotOrbits(dt,tf,Primary,Satellites)
-
-% Satellites is a cell array containing all the massless orbiting bodies
-% Primary    is the object which the satellites are orbiting
-% dt         is the time step of the simulation in minutes
-% tf         represents the duration of the simulation in seconds
+function [] = plotOrbits(Primary,Satellites,tf,dt)
+% PLOTORBITS plot the orbits of some massless bodies about a primary
+%   PLOTORBITS(X1,X2,X3,X4) generates a plot of orbital paths of bodie(s) X2
+%   about body X1 for time X3 with time interval X4.
+%
+%   X1: object of type Primary
+%   X2: cell array of object(s) of type Satellite (add Primary support later)
+%   X3: [minutes]
+%   X4: [minutes]
+%
+%   Class support for inputs X3,X4:
+%      float: double, single
+%
+%   Class support for inputs X1:
+%      Primary
+%   Class support for inputs X2:
+%      Cell array of Primary or Satellite
+%
+%   See also Primary, Satellite, elipticalOrbit2D.
 
 % Check if there is enough information to do the simulation
 for i = 1:length(Satellites)
-    if isempty(Satellites{i}.trueAnomoly) && isempty(Satellites{i}.rMagnitude)
+    if isempty(Satellites{i}.trueAnomoly)
         disp('Not enough information to run simulation.')
-        disp('Need initial values of either true anomoly or magnitude of distance vector')
-        disp('for all satellites. Check that all satellites have initial positions defined.')
+        disp('Need initial value of true anomoly for all satellites.')
+        disp('Check that all satellites have initial positions defined.')
         return
     end
-    if isempty(Satellites{i}.trueAnomoly) && ~isempty(Satellites{i}.rMagnitude)
-        Satellites{i} = Satellites{i}.calculaterMagnitude;
-    end
     if isempty(Satellites{i}.rMagnitude) && ~isempty(Satellites{i}.trueAnomoly)
+        disp('Initial value of satellite radius not provided. Computing now.')
         Satellites{i} = Satellites{i}.calculaterMagnitude;
     end
 end
-
-
 
 t  = 0;
 
